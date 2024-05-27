@@ -9,7 +9,6 @@ console.log(THREE);
 const scene = new THREE.Scene();
 
 //Create objects, we need to create a mesh which is a combination of a geometry (the shape) and the material(how it looks)
-
 const geometry =new THREE.BoxGeometry(1, 1, 1)
 const material = new THREE.MeshBasicMaterial({color: 0xff0000})
 const mesh = new THREE.Mesh(geometry, material)
@@ -34,13 +33,24 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(size.width, size.height)
 
+//Time
+let time = Date.now();
+
+//Animation
+
 function animate() {
+    
+    //Time
+    const currentTime = Date.now();
+    const deltaTime = currentTime - time;  
+    time = currentTime;
+    console.log(deltaTime);  
+    
     requestAnimationFrame(animate);
 
-    mesh.rotation.x += 0.01;
-    mesh.rotation.y += 0.01;
+    mesh.rotation.x += 0.001 * deltaTime;
+    mesh.rotation.y += 0.001 * deltaTime;
 
     renderer.render(scene, camera)
 }
-
 animate()
