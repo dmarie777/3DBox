@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 //canvas
 const canvas = document.querySelector('canvas.webgl')
@@ -23,8 +24,13 @@ const size = {
     height: 600
 }
 //create camera /// 35
-const camera = new THREE.PerspectiveCamera(75, size.width / size.height);
-camera.position.z = 3
+const camera = new THREE.PerspectiveCamera(75, size.width / size.height, 0.1, 100);
+camera.position.x = 2
+camera.position.y = 0
+camera.position.z = 2
+//This moves the camera to the mesh no matter its position
+camera.lookAt(mesh.position)
+
 scene.add(camera)
 
 //Add renderer
@@ -33,18 +39,19 @@ const renderer = new THREE.WebGLRenderer({
 })
 renderer.setSize(size.width, size.height)
 
+//Add Orbit Controls
+const controls = new OrbitControls( camera, renderer.domElement)
+
 //Time
-let time = Date.now();
+let clock = new THREE.Clock();
+clock.start();
 
 //Animation
-
 function animate() {
     
-    //Time
-    const currentTime = Date.now();
-    const deltaTime = currentTime - time;  
-    time = currentTime;
-    console.log(deltaTime);  
+    //Time 
+    let deltaTime = clock.getElapsedTime()
+    console.log(deltaTime);
     
     requestAnimationFrame(animate);
 
