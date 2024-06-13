@@ -20,9 +20,10 @@ scene.add(mesh)
 //Add the camera, there are many kinds of cameras, and we can even have many cameras in one scene
 //create size of scene
 const size = {
-    width: 800,
-    height: 600
+    width: window.innerWidth,
+    height: window.innerHeight
 }
+
 //create camera /// 35
 const camera = new THREE.PerspectiveCamera(75, size.width / size.height, 0.1, 100);
 camera.position.x = 2
@@ -41,6 +42,7 @@ renderer.setSize(size.width, size.height)
 
 //Add Orbit Controls
 const controls = new OrbitControls( camera, renderer.domElement)
+controls.enableDamping = true
 
 //Time
 let clock = new THREE.Clock();
@@ -50,14 +52,16 @@ clock.start();
 function animate() {
     
     //Time 
-    let deltaTime = clock.getElapsedTime()
-    console.log(deltaTime);
+    let deltaTime = clock.getDelta()
+    console.log(clock, deltaTime);
     
+    // Update controls
+    controls.update()
+
     requestAnimationFrame(animate);
 
-    mesh.rotation.x += 0.001 * deltaTime;
-    mesh.rotation.y += 0.001 * deltaTime;
-
+    mesh.rotation.x += deltaTime;
+    mesh.rotation.y +=  deltaTime;
     renderer.render(scene, camera)
 }
 animate()
