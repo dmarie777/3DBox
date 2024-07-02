@@ -1,8 +1,15 @@
-import * as THREE from 'three'
+import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import GUI from 'lil-gui';
+
+const obj = {
+    width: 1,
+    height: 1,
+    depth: 1
+}
 
 //canvas
-const canvas = document.querySelector('canvas.webgl')
+const canvas = document.querySelector('canvas.webgl');
 
 console.log(THREE);
 
@@ -10,12 +17,12 @@ console.log(THREE);
 const scene = new THREE.Scene();
 
 //Create objects, we need to create a mesh which is a combination of a geometry (the shape) and the material(how it looks)
-const geometry =new THREE.BoxGeometry(1, 1, 1)
-const material = new THREE.MeshBasicMaterial({color: 0xff0000})
-const mesh = new THREE.Mesh(geometry, material)
-
+let geometry =new THREE.BoxGeometry(obj.width, obj.height, obj.depth);
+const material = new THREE.MeshBasicMaterial({color: 0xff0000});
+const mesh = new THREE.Mesh(geometry, material);
 //Add objects to the scene
-scene.add(mesh)
+scene.add(mesh);
+
 
 //Add the camera, there are many kinds of cameras, and we can even have many cameras in one scene
 //create size of scene
@@ -61,6 +68,22 @@ renderer.setSize(size.width, size.height)
 const controls = new OrbitControls( camera, renderer.domElement)
 controls.enableDamping = true
 
+// add debug gui
+const gui = new GUI();
+gui.add(document, 'title');
+
+
+gui.add(obj, 'width', 0, 1).onChange(updateGeometry);
+gui.add(obj, 'height', 0, 1).onChange(updateGeometry);
+gui.add(obj, 'depth', 0, 1).onChange(updateGeometry);
+
+//update Geometry 
+function updateGeometry() {
+    mesh.geometry.dispose();  // Dispose of the old geometry
+    mesh.geometry =new THREE.BoxGeometry(obj.width, obj.height, obj.depth);
+}
+
+
 //Time
 let clock = new THREE.Clock();
 clock.start();
@@ -70,7 +93,6 @@ function animate() {
     
     //Time 
     let deltaTime = clock.getDelta()
-    console.log(clock, deltaTime);
     
     // Update controls
     controls.update()
