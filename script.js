@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import GUI from 'lil-gui';
 
+//parameters for the debug GUI
 const obj = {
     width: 1,
     height: 1,
@@ -24,7 +25,19 @@ const mesh = new THREE.Mesh(geometry, material);
 scene.add(mesh);
 
 
-//Add the camera, there are many kinds of cameras, and we can even have many cameras in one scene
+//create planeGeometry
+let plane = new THREE.PlaneGeometry(1, 2);
+console.log(plane);
+const materialPlane = new THREE.MeshBasicMaterial({
+    color: 0xffff00
+});
+const planeMesh = new THREE.Mesh( plane, materialPlane );
+planeMesh.rotateX(-Math.PI / 2);
+
+planeMesh.overdraw = true;
+scene.add(planeMesh);
+
+
 //create size of scene
 const size = {
     width: window.innerWidth,
@@ -47,15 +60,14 @@ window.addEventListener('resize', () => {
 
 })
 
-
+//Add the camera, there are many kinds of cameras, and we can even have many cameras in one scene
 //create camera /// 35
 const camera = new THREE.PerspectiveCamera(75, size.width / size.height, 0.1, 100);
 camera.position.x = 2
 camera.position.y = 0
 camera.position.z = 2
 //This moves the camera to the mesh no matter its position
-camera.lookAt(mesh.position)
-
+camera.lookAt(planeMesh.position)
 scene.add(camera)
 
 //Add renderer
@@ -71,7 +83,6 @@ controls.enableDamping = true
 // add debug gui
 const gui = new GUI();
 gui.add(document, 'title');
-
 
 gui.add(obj, 'width', 0, 1).onChange(updateGeometry);
 gui.add(obj, 'height', 0, 1).onChange(updateGeometry);
