@@ -23,10 +23,11 @@ const material = new THREE.MeshBasicMaterial({color: 0xff0000});
 const mesh = new THREE.Mesh(geometry, material);
 //Add objects to the scene
 scene.add(mesh);
+mesh.position.set(0, obj.height, 0)
 
 
 //create planeGeometry
-let plane = new THREE.PlaneGeometry(1, 2);
+let plane = new THREE.PlaneGeometry(5, 5);
 console.log(plane);
 const materialPlane = new THREE.MeshBasicMaterial({
     color: 0xffff00
