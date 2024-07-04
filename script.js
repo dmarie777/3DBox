@@ -9,6 +9,16 @@ const obj = {
     depth: 1
 }
 
+//Textures
+const image = new Image();
+const metalCastTexture = new THREE.Texture(image);
+metalCastTexture.colorSpace = THREE.SRGBColorSpace
+
+image.onload = ()  => {
+    metalCastTexture.needsUpdate = true;
+}
+image.src = '/static/MetalCastRusted/MetalCastRusted001_COL_2K.png'
+
 //canvas
 const canvas = document.querySelector('canvas.webgl');
 
@@ -30,7 +40,7 @@ mesh.position.set(0, obj.height, 0)
 let plane = new THREE.PlaneGeometry(5, 5);
 console.log(plane);
 const materialPlane = new THREE.MeshBasicMaterial({
-    color: 0xffff00
+    map: metalCastTexture
 });
 const planeMesh = new THREE.Mesh( plane, materialPlane );
 planeMesh.rotateX(-Math.PI / 2);
