@@ -10,14 +10,30 @@ const obj = {
 }
 
 //Textures
-const image = new Image();
-const metalCastTexture = new THREE.Texture(image);
-metalCastTexture.colorSpace = THREE.SRGBColorSpace
+const manager = new THREE.LoadingManager();
+manager.onStart = function ( url, itemsLoaded, itemsTotal ) {
+	console.log( 'Started loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+};
 
-image.onload = ()  => {
-    metalCastTexture.needsUpdate = true;
-}
-image.src = '/static/MetalCastRusted/MetalCastRusted001_COL_2K.png'
+manager.onLoad = function ( ) {
+	console.log( 'Loading complete!');
+};
+
+manager.onProgress = function ( url, itemsLoaded, itemsTotal ) {
+	console.log( 'Loading file: ' + url + '.\nLoaded ' + itemsLoaded + ' of ' + itemsTotal + ' files.' );
+};
+
+manager.onError = function ( url ) {
+	console.log( 'There was an error loading ' + url );
+};
+const textureLoader = new THREE.TextureLoader(manager)
+const metalCastTexture = textureLoader.load('/static/MetalCastRusted/MetalCastRusted001_COL_2K.png')
+const metalSteelTexture = textureLoader.load('/static/MetalSteelBrushed001/MetalSteelBrushed001_COL_2K_METALNESS.png')
+
+metalCastTexture.colorSpace = THREE.SRGBColorSpace
+metalSteelTexture.colorSpace = THREE.SRGBColorSpace
+
+
 
 //canvas
 const canvas = document.querySelector('canvas.webgl');
@@ -29,7 +45,7 @@ const scene = new THREE.Scene();
 
 //Create objects, we need to create a mesh which is a combination of a geometry (the shape) and the material(how it looks)
 let geometry =new THREE.BoxGeometry(obj.width, obj.height, obj.depth);
-const material = new THREE.MeshBasicMaterial({color: 0xff0000});
+const material = new THREE.MeshBasicMaterial({map: metalSteelTexture});
 const mesh = new THREE.Mesh(geometry, material);
 //Add objects to the scene
 scene.add(mesh);
