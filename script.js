@@ -27,11 +27,17 @@ manager.onError = function ( url ) {
 	console.log( 'There was an error loading ' + url );
 };
 const textureLoader = new THREE.TextureLoader(manager)
-const metalCastTexture = textureLoader.load('/static/MetalCastRusted/MetalCastRusted001_COL_2K.png')
-const metalSteelTexture = textureLoader.load('/static/MetalSteelBrushed001/MetalSteelBrushed001_COL_2K_METALNESS.png')
+const metalCastColor = textureLoader.load('/static/MetalCastRusted/MetalCastRusted001_COL_2K.png')
+const metalCastNormal = textureLoader.load('/static/MetalCastRusted/MetalCastRusted001_NRM_2K.png')
+const metalCastDisp = textureLoader.load('/static/MetalCastRusted/MetalCastRusted001_DISP_2K.png')
+const metalCastRoughness = textureLoader.load('/static/MetalCastRusted/MetalCastRusted001_REFL_2K.png')
+const metalCastGloss = textureLoader.load('/static/MetalCastRusted/MetalCastRusted001_GLOSS_2K.png')
 
-metalCastTexture.colorSpace = THREE.SRGBColorSpace
-metalSteelTexture.colorSpace = THREE.SRGBColorSpace
+const metalSteelColor = textureLoader.load('/static/MetalSteelBrushed001/MetalSteelBrushed001_COL_2K_METALNESS.png')
+
+
+metalCastColor.colorSpace = THREE.SRGBColorSpace
+metalSteelColor.colorSpace = THREE.SRGBColorSpace
 
 
 
@@ -45,19 +51,28 @@ const scene = new THREE.Scene();
 
 //Create objects, we need to create a mesh which is a combination of a geometry (the shape) and the material(how it looks)
 let geometry =new THREE.BoxGeometry(obj.width, obj.height, obj.depth);
-const material = new THREE.MeshBasicMaterial({map: metalSteelTexture});
+const material = new THREE.MeshBasicMaterial({
+    map: metalSteelColor
+
+});
 const mesh = new THREE.Mesh(geometry, material);
 //Add objects to the scene
 scene.add(mesh);
-mesh.position.set(0, obj.height, 0)
+mesh.position.set(0, obj.height*1.8, 0)
 
 
 //create planeGeometry
-let plane = new THREE.PlaneGeometry(5, 5);
-console.log(plane);
-const materialPlane = new THREE.MeshBasicMaterial({
-    map: metalCastTexture
-});
+let plane = new THREE.PlaneGeometry(5, 5, 50,50);
+const materialPlane = new THREE.MeshStandardMaterial(
+    {
+    map: metalCastColor,
+    normalMap: metalCastNormal,
+    displacementMap: metalCastDisp,
+    displacementScale: 1.5,
+    roughnessMap:  metalCastRoughness,
+
+    }
+);
 const planeMesh = new THREE.Mesh( plane, materialPlane );
 planeMesh.rotateX(-Math.PI / 2);
 
@@ -121,6 +136,10 @@ function updateGeometry() {
     mesh.geometry =new THREE.BoxGeometry(obj.width, obj.height, obj.depth);
 }
 
+//basic light
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+directionalLight.position.set(5,10,7.5)
+scene.add(directionalLight)
 
 //Time
 let clock = new THREE.Clock();
