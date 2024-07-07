@@ -27,13 +27,17 @@ manager.onError = function ( url ) {
 	console.log( 'There was an error loading ' + url );
 };
 const textureLoader = new THREE.TextureLoader(manager)
+//MetalCast
 const metalCastColor = textureLoader.load('/static/MetalCastRusted/MetalCastRusted001_COL_2K.png')
 const metalCastNormal = textureLoader.load('/static/MetalCastRusted/MetalCastRusted001_NRM_2K.png')
 const metalCastDisp = textureLoader.load('/static/MetalCastRusted/MetalCastRusted001_DISP_2K.png')
 const metalCastRoughness = textureLoader.load('/static/MetalCastRusted/MetalCastRusted001_REFL_2K.png')
 const metalCastGloss = textureLoader.load('/static/MetalCastRusted/MetalCastRusted001_GLOSS_2K.png')
-
+// MetalSteel
 const metalSteelColor = textureLoader.load('/static/MetalSteelBrushed001/MetalSteelBrushed001_COL_2K_METALNESS.png')
+const metalSteelNormal = textureLoader.load('/static/MetalSteelBrushed001/MetalSteelBrushed001_NRM_2K_METALNESS.png')
+const metalSteelDisp = textureLoader.load('/static/MetalSteelBrushed001/MetalSteelBrushed001_DISP_2K_METALNESS.png')
+const metalSteelRoughness = textureLoader.load('/static/MetalSteelBrushed001/MetalSteelBrushed001_ROUGHNESS_2K_METALNESS.png')
 
 
 metalCastColor.colorSpace = THREE.SRGBColorSpace
@@ -51,10 +55,13 @@ const scene = new THREE.Scene();
 
 //Create objects, we need to create a mesh which is a combination of a geometry (the shape) and the material(how it looks)
 let geometry =new THREE.BoxGeometry(obj.width, obj.height, obj.depth);
-const material = new THREE.MeshBasicMaterial({
-    map: metalSteelColor
-
-});
+const material = new THREE.MeshStandardMaterial(
+    {
+    map: metalSteelColor,
+    normalMap: metalSteelNormal
+    // displacementMap: metalSteelDisp
+    }
+);
 const mesh = new THREE.Mesh(geometry, material);
 //Add objects to the scene
 scene.add(mesh);
